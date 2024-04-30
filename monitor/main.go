@@ -67,7 +67,7 @@ func main() {
 }
 
 func scrapeMetrics() (metrics []string, err error) {
-	countTuvaluQuery := fmt.Sprintf("[out:json];\n(\n  area(%s);\n  nwr(%s);\n);\nout count;", tuvaluBounds, tuvaluBounds)
+	countTuvaluQuery := fmt.Sprintf("[out:json];nwr(%s);out count;", tuvaluBounds)
 
 	endpointResp, err := queryOneTags(endpoint, countTuvaluQuery)
 	if err != nil {

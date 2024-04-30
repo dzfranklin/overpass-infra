@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: monitor
-          image: ghcr.io/dzfranklin/overpass-monitor:v0.5
+          image: ghcr.io/dzfranklin/overpass-monitor:v0.6
           env:
             - name: ENDPOINT
               value: "http://api/api"
