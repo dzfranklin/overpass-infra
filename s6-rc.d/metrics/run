@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+REPLICATION_URL="https://planet.openstreetmap.org/replication/minute/"
+METRICS_URL="https://influx-prod-24-prod-eu-west-2.grafana.net/api/v1/push/influx/write"
+
+if [ -z "$METRICS_API_KEY" ]; then
+  echo "METRICS_API_KEY is not set"
+  exit 1
+fi
+
+while true; do
+  sleep 1
+  latestSequenceNumber=$(curl -sL "$REPLICATION_URL/state.txt" | grep sequenceNumber | cut -d'=' -f2)
+  if [ -z "$latestSequenceNumber" ]; then
+    echo "Failed to get latest sequence number"
+    curl -Lv "$REPLICATION_URL/state.txt"
+    sleep 10
+    continue
+  fi
+  sequenceNumber=$(cat /data/db/replicate_id)
+
+  curl -s -X POST -H "Authorization: Bearer $METRICS_API_KEY" -H  "Content-Type: text/plain; version=0.0.4" "$METRICS_URL" \
+     -d "overpass sequence_number=$sequenceNumber
+         overpass latest_sequence_number=$latestSequenceNumber
+         overpass replication_lag=$((latestSequenceNumber - sequenceNumber))";
+done

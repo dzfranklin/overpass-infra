@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+REPLICATION_URL="https://planet.openstreetmap.org/replication/minute/"
+
+sleep 1
+/overpass/bin/fetch_osc_and_apply.sh "$REPLICATION_URL"

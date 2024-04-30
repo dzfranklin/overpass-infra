@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+/overpass/bin/dispatcher --osm-base --db-dir="/data/db/" \
+  --allow-duplicate-queries=yes \
+  --rate-limit=0 &
+pid=$!
+trap "echo 'terminating dispatcher' && /overpass/bin/dispatcher --terminate" SIGTERM
+wait $pid

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+sleep 1
+cp -pR /overpass/rules /data/db/
+/overpass/bin/dispatcher --areas --db-dir="/data/db/" \
+  --allow-duplicate-queries=yes \
+  --rate-limit=0 &
+pid=$!
+trap "echo 'terminating areas dispatcher' && /overpass/bin/dispatcher --areas --terminate" SIGTERM
+wait $pid

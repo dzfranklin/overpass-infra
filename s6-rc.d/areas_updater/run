@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sleep 1
+/overpass/bin/rules_loop.sh "/data/db/"
