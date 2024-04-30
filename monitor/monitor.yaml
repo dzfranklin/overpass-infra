@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor
+  namespace: overpass
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      labels:
+        app: monitor
+    spec:
+      containers:
+        - name: monitor
+          image: ghcr.io/dzfranklin/overpass-monitor:v0.5
+          env:
+            - name: ENDPOINT
+              value: "http://api/api"
+            - name: COMPARATOR_ENDPOINT
+              value: "https://overpass-api.de/api"
+            - name: METRICS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: metrics-api-key
+                  key: key
+            - name: METRICS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: metrics-api-key
+                  key: url

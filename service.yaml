@@ -64,7 +64,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/dzfranklin/overpass-api:v0.37
+          image: ghcr.io/dzfranklin/overpass-api:v0.38
           volumeMounts:
             - name: data
               mountPath: /data

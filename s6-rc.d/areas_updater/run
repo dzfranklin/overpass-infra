@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
 
 sleep 1
-/overpass/bin/rules_loop.sh "/data/db/"
+
+DB_DIR="/data/db"
+
+while [[ true ]]; do
+{
+  echo "areas_updater: `date '+%F %T'`: update started"
+  /overpass/bin/osm3s_query --progress --rules <$DB_DIR/rules/areas.osm3s
+  echo "areas_updater: `date '+%F %T'`: update finished"
+  sleep 3
+}; done
