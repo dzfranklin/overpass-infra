@@ -5,16 +5,21 @@ sleep 1
 DB_DIR="/data/db"
 METRICS_URL="https://influx-prod-24-prod-eu-west-2.grafana.net/api/v1/push/influx/write"
 
-while [[ true ]]; do
-{
-  echo "areas_updater: `date '+%F %T'`: update started"
+while true; do
+  echo "areas_updater: $(date '+%F %T'): update started"
+
   start_time=$(date +%s)
   /overpass/bin/osm3s_query --progress --rules <$DB_DIR/rules/areas.osm3s
+  status=$?
   end_time=$(date +%s)
-  echo "areas_updater: `date '+%F %T'`: update finished"
 
-  curl -s -X POST -H "Authorization: Bearer $METRICS_API_KEY" -H  "Content-Type: text/plain; version=0.0.4" "$METRICS_URL" \
-     -d "overpass area_update_duration_seconds=$((end_time - start_time))";
+  if [[ $status -eq 0 ]]; then
+    echo "areas_updater: $(date '+%F %T'): update finished"
+    curl -s -X POST -H "Authorization: Bearer $METRICS_API_KEY" -H  "Content-Type: text/plain; version=0.0.4" "$METRICS_URL" \
+       -d "overpass area_update_duration_seconds=$((end_time - start_time))";
+  else
+    echo "areas_updater: $(date '+%F %T'): update failed"
+  fi
 
   sleep 3
-}; done
+done
